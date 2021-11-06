@@ -160,7 +160,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>phantomjsdriver</artifactId>
-            <version>1.4.4</version>
+            <version>1.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.thed.zephyr.connect</groupId>
@@ -231,11 +231,11 @@
                         </replacement>  
                         <replacement> 
                             <token>sourcepath=.*.jar"</token> 
-                            <value></value> 
+                            <value/> 
                         </replacement> 
                         <replacement> 
                             <token>.*target/test-classes.*</token> 
-                            <value></value> 
+                            <value/> 
                         </replacement> 
                         <replacement> 
                             <token>kind="var"</token> 
