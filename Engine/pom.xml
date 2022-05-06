@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml-schemas</artifactId>
-            <version>4.1.2</version>
+            <version>${apache.poi.ooxml.schemas.version}</version>
         </dependency>
 
 
@@ -108,19 +108,19 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.0.0</version>
+            <version>${selenium.version}</version>
         </dependency>
 	    
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-remote-driver</artifactId>
-            <version>4.1.2</version>
+            <version>${selenium.remote.version}</version>
         </dependency>
 	    
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
-            <version>3.61.0</version>
+            <version>${selenium.html.version}</version>
         </dependency>
         <dependency>
             <groupId>com.galenframework</groupId>
