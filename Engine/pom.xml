@@ -116,7 +116,12 @@
             <artifactId>selenium-remote-driver</artifactId>
             <version>${selenium.remote.version}</version>
         </dependency>
-	    
+	
+	<dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.9.3</version>
+        </dependency>   
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
@@ -282,7 +287,6 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${setupDir}/Engine/src</outputDirectory>
-                            <overWriteIfNewer>true</overWriteIfNewer>
                             <resources> 
                                 <resource>
                                     <directory>${project.basedir}/src</directory>
@@ -298,7 +302,6 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${setupDir}/Engine</outputDirectory>
-                            <overWriteIfNewer>true</overWriteIfNewer>
                             <resources>        
                                 <resource>
                                     <directory>${project.basedir}</directory>
