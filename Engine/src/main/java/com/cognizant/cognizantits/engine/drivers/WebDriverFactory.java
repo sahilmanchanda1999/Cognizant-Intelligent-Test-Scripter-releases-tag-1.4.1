@@ -183,7 +183,8 @@ public class WebDriverFactory {
                     driver = new FirefoxDriver(withFirefoxProfile(caps));
                     addGeckoDriverAddon((FirefoxDriver) driver);
                 } else {
-                    caps = DesiredCapabilities.firefox().merge(withFirefoxProfile(caps));
+                    caps = new DesiredCapabilities("firefox","",Platform.ANY).merge(withFirefoxProfile(caps));
+		    //caps = DesiredCapabilities.firefox().merge(withFirefoxProfile(caps));
                 }
                 break;
             case Chrome:
@@ -191,7 +192,8 @@ public class WebDriverFactory {
                 if (!isGrid) {
                     driver = new ChromeDriver(withChromeOptions(caps));
                 } else {
-                    caps = DesiredCapabilities.chrome().merge(withChromeOptions(caps));
+                    caps = new DesiredCapabilities("chrome","",Platform.ANY).merge(withChromeOptions(caps));
+		    //caps = DesiredCapabilities.chrome().merge(withChromeOptions(caps));
                 }
                 break;
             case ChromeHeadless:
@@ -199,7 +201,8 @@ public class WebDriverFactory {
                 if (!isGrid) {
                     driver = new ChromeDriver(withHeadlessChrome(withChromeOptions(caps)));
                 } else {
-                    caps = DesiredCapabilities.chrome().merge(withHeadlessChrome(withChromeOptions(caps)));
+		    caps = new DesiredCapabilities("chrome","",Platform.ANY).merge(withHeadlessChrome(withChromeOptions(caps)));
+                    //caps = DesiredCapabilities.chrome().merge(withHeadlessChrome(withChromeOptions(caps)));
                 }
                 break;
             case IE:
@@ -207,7 +210,8 @@ public class WebDriverFactory {
                     InternetExplorerOptions options = new InternetExplorerOptions(caps);
                     driver = new InternetExplorerDriver(options);
                 } else {
-                    caps = DesiredCapabilities.internetExplorer().merge(caps);
+                    caps = new DesiredCapabilities("internet explorer","",Platform.WINDOWS).merge(caps);
+		    //caps = DesiredCapabilities.internetExplorer().merge(caps);
                 }
                 break;
             case Edge:
@@ -216,7 +220,8 @@ public class WebDriverFactory {
                     options.merge(caps);
                     driver = new EdgeDriver(options);
                 } else {
-                    caps = DesiredCapabilities.edge().merge(caps);
+                    caps = new DesiredCapabilities("MicrosoftEdge","",Platform.WINDOWS).merge(caps);
+		    //caps = DesiredCapabilities.edge().merge(caps);
                 }
                 break;
             case HtmlUnit:
@@ -227,7 +232,8 @@ public class WebDriverFactory {
                     options.merge(caps);
                     driver = new OperaDriver(options);
                 } else {
-                    caps = DesiredCapabilities.operaBlink().merge(caps);
+                    caps = new DesiredCapabilities("operaBlink","",Platform.ANY).merge(caps);
+		    //caps = DesiredCapabilities.operaBlink().merge(caps);
                 }
                 break;
             case Safari:
@@ -235,14 +241,16 @@ public class WebDriverFactory {
                     SafariOptions options = new SafariOptions(caps);
                     driver = new SafariDriver(options);
                 } else {
-                    caps = DesiredCapabilities.safari().merge(caps);
+                    caps = new DesiredCapabilities("safari","",Platform.MAC).merge(caps);
+		    //caps = DesiredCapabilities.safari().merge(caps);
                 }
                 break;
             case PhantomJS:
                 if (!isGrid) {
                     driver = new PhantomJSDriver(caps);
                 } else {
-                    caps = DesiredCapabilities.phantomjs().merge(caps);
+                    caps = new DesiredCapabilities("phantomjs","",Platform.ANY).merge(caps);
+		    //caps = DesiredCapabilities.phantomjs().merge(caps);
                 }
                 break;
             case Empty:
@@ -308,7 +316,7 @@ public class WebDriverFactory {
         if (!isGrid) {
             driver = new ChromeDriver(chromeEmulatorCaps);
         } else {
-            DesiredCapabilities caps = DesiredCapabilities.chrome();
+            DesiredCapabilities caps = new DesiredCapabilities("chrome","",Platform.ANY);
             caps.merge(chromeEmulatorCaps);
             Boolean checkForProxy = settings.getDriverSettings().useProxy();
             driver = createRemoteDriver(remoteUrl, caps, checkForProxy, settings.getDriverSettings());
@@ -366,7 +374,7 @@ public class WebDriverFactory {
                 }
                 if (caps.getPlatform().is(Platform.MAC)) {
                     if (browserName.equalsIgnoreCase("firefox")) {
-                        caps = DesiredCapabilities.firefox();
+                        caps = new DesiredCapabilities();
                         FirefoxOptions fOptions = new FirefoxOptions();
                         String binPath = "/Applications/Firefox" + cap.getVersion() + ".app/Contents/MacOs/firefox";
                         if (binPath != null && !binPath.isEmpty()) {
@@ -374,7 +382,7 @@ public class WebDriverFactory {
                         }
                         caps.setCapability(FirefoxOptions.FIREFOX_OPTIONS, fOptions);
                     } else if (browserName.equalsIgnoreCase("chrome")) {
-                        caps = DesiredCapabilities.chrome();
+                        caps = new DesiredCapabilities();
                         ChromeOptions cOptions = new ChromeOptions();
                         String binPath = "/Applications/Google Chrome " + cap.getVersion() + ".app/Contents/MacOS/Google Chrome";
                         if (binPath != null && !binPath.isEmpty()) {
@@ -384,7 +392,7 @@ public class WebDriverFactory {
                     }
                 } else if (caps.getPlatform().toString().contains("WIN") || caps.getPlatform().toString().contains("VISTA")) {
                     if (browserName.equalsIgnoreCase("firefox")) {
-                        caps = DesiredCapabilities.firefox();
+                        caps = new DesiredCapabilities();
                         FirefoxOptions fOptions = new FirefoxOptions();
                         String binPath = "C:\\Mozilla\\" + cap.getVersion() + "\\firefox.exe";
                         if (binPath != null && !binPath.isEmpty()) {
@@ -392,7 +400,7 @@ public class WebDriverFactory {
                         }
                         caps.setCapability(FirefoxOptions.FIREFOX_OPTIONS, fOptions);
                     } else if (browserName.equalsIgnoreCase("chrome")) {
-                        caps = DesiredCapabilities.chrome();
+                        caps = new DesiredCapabilities();
                         ChromeOptions cOptions = new ChromeOptions();
                         String binPath = "C:\\Chrome\\" + cap.getVersion() + "\\chrome.exe";
                         if (binPath != null && !binPath.isEmpty()) {
@@ -430,9 +438,9 @@ public class WebDriverFactory {
 
     private static ChromeOptions getChromeUAECaps(DesiredCapabilities caps, Emulator emulator) {
         ChromeOptions chromeOptions = new ChromeOptions();
-        if (!emulator.getUserAgent().trim().isEmpty()) {
+        /*if (!emulator.getUserAgent().trim().isEmpty()) {
             chromeOptions.addArguments("--user-agent=" + emulator.getUserAgent());
-        }
+        }*/
 		chromeOptions.merge(caps);
         //caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         return chromeOptions;
@@ -542,7 +550,7 @@ public class WebDriverFactory {
         } else {
             options = new ChromeOptions();
         }
-        options.addArguments("--headless", "--disable-gpu", "--window-size=1366,768");
+        //options.addArguments("--headless", "--disable-gpu", "--window-size=1366,768");
         options.setCapability(ChromeOptions.CAPABILITY, options);
         return options;
     }
@@ -555,7 +563,7 @@ public class WebDriverFactory {
         } else {
             options = new ChromeOptions();
         }
-        if (!SystemDefaults.debugMode.get()) {
+        /*if (!SystemDefaults.debugMode.get()) {
             options.addArguments("--disable-notifications");
         }
         if (SystemDefaults.getClassesFromJar.get() && SystemDefaults.debugMode.get()) {
@@ -564,6 +572,7 @@ public class WebDriverFactory {
             }
         }
         options.addArguments("--start-maximized");
+	*/
         options = addChromeOptions(options);
         caps.setCapability(ChromeOptions.CAPABILITY, options);
         options.merge(caps);
