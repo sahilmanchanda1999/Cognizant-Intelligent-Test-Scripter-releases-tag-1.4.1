@@ -33,6 +33,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.http.HttpClient;
+import org.openqa.selenium.remote.http.ClientConfig;
 
 public class RemoteProxy {
 
@@ -139,7 +140,7 @@ class SimpleHttpClientFactory implements HttpClient.Factory {
     public SimpleHttpClientFactory(okhttp3.OkHttpClient.Builder builder) {
         this.builder = builder;
     }
-
+/*
     @Override
     public org.openqa.selenium.remote.http.HttpClient createClient(URL url) {
         return new org.openqa.selenium.remote.internal.OkHttpClient(builder.build(), url);
@@ -149,7 +150,14 @@ class SimpleHttpClientFactory implements HttpClient.Factory {
     public HttpClient.Builder builder() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+*/
+    @Override
+    public HttpClient createClient(URL url) { return HttpClient.Factory.super.createClient(url); }
+    
+    
+    @Override
+    public HttpClient createClient(ClientConfig config) { return null; }
+    
     @Override
     public void cleanupIdleClients() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
