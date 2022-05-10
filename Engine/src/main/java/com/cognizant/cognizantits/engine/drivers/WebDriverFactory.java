@@ -183,7 +183,9 @@ public class WebDriverFactory {
                     driver = new FirefoxDriver(withFirefoxProfile(caps));
                     addGeckoDriverAddon((FirefoxDriver) driver);
                 } else {
-                    caps = new DesiredCapabilities("firefox","",Platform.ANY).merge(withFirefoxProfile(caps));
+                    DesiredCapabilities capabilities = new DesiredCapabilities("firefox","",Platform.ANY);
+                    capabilities.setCapability("acceptInsecureCerts",true);
+                    caps = capabilities.merge(withFirefoxProfile(caps));
 		    //caps = DesiredCapabilities.firefox().merge(withFirefoxProfile(caps));
                 }
                 break;
@@ -392,7 +394,7 @@ public class WebDriverFactory {
                     }
                 } else if (caps.getPlatform().toString().contains("WIN") || caps.getPlatform().toString().contains("VISTA")) {
                     if (browserName.equalsIgnoreCase("firefox")) {
-                        caps = new DesiredCapabilities();
+                        caps = new DesiredCapabilities("firefox","",Platform.ANY);
                         FirefoxOptions fOptions = new FirefoxOptions();
                         String binPath = "C:\\Mozilla\\" + cap.getVersion() + "\\firefox.exe";
                         if (binPath != null && !binPath.isEmpty()) {
@@ -438,9 +440,9 @@ public class WebDriverFactory {
 
     private static ChromeOptions getChromeUAECaps(DesiredCapabilities caps, Emulator emulator) {
         ChromeOptions chromeOptions = new ChromeOptions();
-        /*if (!emulator.getUserAgent().trim().isEmpty()) {
+        if (!emulator.getUserAgent().trim().isEmpty()) {
             chromeOptions.addArguments("--user-agent=" + emulator.getUserAgent());
-        }*/
+        }
 		chromeOptions.merge(caps);
         //caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         return chromeOptions;
@@ -550,7 +552,7 @@ public class WebDriverFactory {
         } else {
             options = new ChromeOptions();
         }
-        //options.addArguments("--headless", "--disable-gpu", "--window-size=1366,768");
+        options.addArguments("--headless", "--disable-gpu", "--window-size=1366,768");
         options.setCapability(ChromeOptions.CAPABILITY, options);
         return options;
     }
@@ -563,7 +565,7 @@ public class WebDriverFactory {
         } else {
             options = new ChromeOptions();
         }
-        /*if (!SystemDefaults.debugMode.get()) {
+        if (!SystemDefaults.debugMode.get()) {
             options.addArguments("--disable-notifications");
         }
         if (SystemDefaults.getClassesFromJar.get() && SystemDefaults.debugMode.get()) {
@@ -572,7 +574,7 @@ public class WebDriverFactory {
             }
         }
         options.addArguments("--start-maximized");
-	*/
+
         options = addChromeOptions(options);
         caps.setCapability(ChromeOptions.CAPABILITY, options);
         options.merge(caps);
