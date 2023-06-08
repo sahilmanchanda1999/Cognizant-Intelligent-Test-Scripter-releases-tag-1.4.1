@@ -62,7 +62,13 @@ public class XML {
     }
 
     public static Document getDoc(String doc) throws Exception {
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder()
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+        documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities",false);
+        documentBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
+
+        return documentBuilderFactory.newDocumentBuilder()
                 .parse(new ByteArrayInputStream(doc.getBytes("UTF-8")));
     }
 
