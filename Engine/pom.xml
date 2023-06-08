@@ -178,7 +178,7 @@
             <artifactId>zfj-cloud-rest-client</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/jwt-generator.jar</systemPath>
+            <systemPath>${pom.basedir}/jwt-generator.jar</systemPath>
         </dependency>
     </dependencies>
     <repositories>

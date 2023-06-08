@@ -58,8 +58,6 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
@@ -228,16 +226,6 @@ public class WebDriverFactory {
                 break;
             case HtmlUnit:
                 return new ExtendedHtmlUnitDriver(BrowserVersion.BEST_SUPPORTED);
-            case Opera:
-                if (!isGrid) {
-                    OperaOptions options = new OperaOptions();
-                    options.merge(caps);
-                    driver = new OperaDriver(options);
-                } else {
-                    caps = new DesiredCapabilities("operaBlink","",Platform.ANY).merge(caps);
-		    //caps = DesiredCapabilities.operaBlink().merge(caps);
-                }
-                break;
             case Safari:
                 if (!isGrid) {
                     SafariOptions options = new SafariOptions(caps);
@@ -360,13 +348,13 @@ public class WebDriverFactory {
                 String browserName = caps.getBrowserName();
                 boolean localTesting = false;
                 DesiredCapabilities cap = new DesiredCapabilities();
-                cap.setCapability("packagename", caps.getPlatform() + "_" + caps.getBrowserName() + "_" + caps.getVersion() + Control.triggerId + ".jar");
+                cap.setCapability("packagename", caps.getPlatformName() + "_" + caps.getBrowserName() + "_" + caps.getBrowserVersion() + Control.triggerId + ".jar");
                 cap.setCapability("triggerId", Control.triggerId);
                 cap.setCapability("executionType", "false");
                 cap.setCapability("consoleSessionId", "CITS");
                 cap.setCapability("seleniumVersion", caps.getCapability("seleniumVersion"));
-                cap.setPlatform(caps.getPlatform());
-                cap.setVersion(caps.getVersion());
+                cap.setPlatform(caps.getPlatformName());
+                cap.setVersion(caps.getBrowserVersion());
                 cap.setCapability("username", caps.getCapability("username"));
                 cap.setCapability("password", caps.getCapability("password"));
                 cap.setCapability("servicerequestid", caps.getCapability("servicerequestid"));
@@ -374,11 +362,11 @@ public class WebDriverFactory {
                     cap.setCapability("fastpaas.local", caps.getCapability("fastpaas.local"));
                     localTesting = (boolean) caps.getCapability("fastpaas.local");
                 }
-                if (caps.getPlatform().is(Platform.MAC)) {
+                if (caps.getPlatformName().is(Platform.MAC)) {
                     if (browserName.equalsIgnoreCase("firefox")) {
                         caps = new DesiredCapabilities();
                         FirefoxOptions fOptions = new FirefoxOptions();
-                        String binPath = "/Applications/Firefox" + cap.getVersion() + ".app/Contents/MacOs/firefox";
+                        String binPath = "/Applications/Firefox" + cap.getBrowserVersion() + ".app/Contents/MacOs/firefox";
                         if (binPath != null && !binPath.isEmpty()) {
                             fOptions.setBinary(binPath);
                         }
@@ -386,17 +374,17 @@ public class WebDriverFactory {
                     } else if (browserName.equalsIgnoreCase("chrome")) {
                         caps = new DesiredCapabilities();
                         ChromeOptions cOptions = new ChromeOptions();
-                        String binPath = "/Applications/Google Chrome " + cap.getVersion() + ".app/Contents/MacOS/Google Chrome";
+                        String binPath = "/Applications/Google Chrome " + cap.getBrowserVersion() + ".app/Contents/MacOS/Google Chrome";
                         if (binPath != null && !binPath.isEmpty()) {
                             cOptions.setBinary(binPath);
                         }
                         caps.setCapability(ChromeOptions.CAPABILITY, cOptions);
                     }
-                } else if (caps.getPlatform().toString().contains("WIN") || caps.getPlatform().toString().contains("VISTA")) {
+                } else if (caps.getPlatformName().toString().contains("WIN") || caps.getPlatformName().toString().contains("VISTA")) {
                     if (browserName.equalsIgnoreCase("firefox")) {
                         caps = new DesiredCapabilities("firefox","",Platform.ANY);
                         FirefoxOptions fOptions = new FirefoxOptions();
-                        String binPath = "C:\\Mozilla\\" + cap.getVersion() + "\\firefox.exe";
+                        String binPath = "C:\\Mozilla\\" + cap.getBrowserVersion() + "\\firefox.exe";
                         if (binPath != null && !binPath.isEmpty()) {
                             fOptions.setBinary(binPath);
                         }
@@ -404,7 +392,7 @@ public class WebDriverFactory {
                     } else if (browserName.equalsIgnoreCase("chrome")) {
                         caps = new DesiredCapabilities();
                         ChromeOptions cOptions = new ChromeOptions();
-                        String binPath = "C:\\Chrome\\" + cap.getVersion() + "\\chrome.exe";
+                        String binPath = "C:\\Chrome\\" + cap.getBrowserVersion() + "\\chrome.exe";
                         if (binPath != null && !binPath.isEmpty()) {
                             cOptions.setBinary(binPath);
                         }
@@ -412,8 +400,8 @@ public class WebDriverFactory {
                     }
                 }
                 caps.merge(cap);
-                System.out.println("[Capabilities]: [Platform:" + caps.getPlatform() + "]\n [BrowserName:" + caps.getBrowserName() + "]\n [BrowserVersion:" + caps.getVersion() + "]\n"
-                        + " [TriggerId:" + Control.triggerId + "]\n [PackageName:" + caps.getPlatform() + "_" + caps.getBrowserName() + "_" + caps.getVersion() + Control.triggerId + ".jar" + "]"
+                System.out.println("[Capabilities]: [Platform:" + caps.getPlatformName() + "]\n [BrowserName:" + caps.getBrowserName() + "]\n [BrowserVersion:" + caps.getBrowserVersion() + "]\n"
+                        + " [TriggerId:" + Control.triggerId + "]\n [PackageName:" + caps.getPlatformName() + "_" + caps.getBrowserName() + "_" + caps.getBrowserVersion() + Control.triggerId + ".jar" + "]"
                         + "\n [SeleniumVersion:" + caps.getCapability("seleniumVersion") + "]\n [Local Testing:" + localTesting + "]");
             }
             if (checkForProxy) {
@@ -453,7 +441,7 @@ public class WebDriverFactory {
         if (!emulator.getUserAgent().trim().isEmpty()) {
             profile.setPreference("general.useragent.override", emulator.getUserAgent());
         }
-        caps.setCapability(FirefoxDriver.PROFILE, profile);
+        caps.setCapability(FirefoxDriver.SystemProperty.BROWSER_PROFILE, profile);
         return caps;
     }
 
@@ -513,7 +501,7 @@ public class WebDriverFactory {
     private static FirefoxOptions withFirefoxProfile(DesiredCapabilities caps) {
         FirefoxOptions fOptions = new FirefoxOptions();
         FirefoxProfile fProfile;
-        Object obj = caps.getCapability(FirefoxDriver.PROFILE);
+        Object obj = caps.getCapability(FirefoxDriver.SystemProperty.BROWSER_PROFILE);
         if (obj != null && obj instanceof FirefoxProfile) {
             fProfile = (FirefoxProfile) obj;
         } else {
@@ -528,7 +516,7 @@ public class WebDriverFactory {
         // }
         // }
         fProfile = addFFProfile(fProfile);
-        caps.setCapability(FirefoxDriver.PROFILE, fProfile);
+        caps.setCapability(FirefoxDriver.SystemProperty.BROWSER_PROFILE, fProfile);
         String binPath = System.getProperty("firefox.bin.path");
 
         if (binPath != null && !binPath.isEmpty()) {
@@ -589,7 +577,6 @@ public class WebDriverFactory {
 
     private static ChromeOptions addChromeOptions(ChromeOptions chromeOptions) {
         //Do your ChromeOptions Settings over here
-
         return chromeOptions;
     }
 

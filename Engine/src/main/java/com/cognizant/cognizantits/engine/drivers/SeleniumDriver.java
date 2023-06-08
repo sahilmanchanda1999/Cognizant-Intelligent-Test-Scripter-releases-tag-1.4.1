@@ -26,7 +26,6 @@ import com.cognizant.cognizantits.engine.execution.exception.UnCaughtException;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
 import com.galenframework.utils.GalenUtils;
-import io.appium.java_client.MobileDriver;
 import io.appium.java_client.android.AndroidDriver;
 import java.io.File;
 import java.io.IOException;
@@ -138,11 +137,7 @@ public class SeleniumDriver {
 
     public Boolean isAlive() {
         try {
-            if(driver instanceof MobileDriver){
-                driver.manage();
-            } else {
-                driver.getCurrentUrl();
-            }
+            driver.getCurrentUrl();
             return true;
         } catch (Exception ex) {
             throw new DriverClosedException(runContext.BrowserName);
@@ -157,7 +152,7 @@ public class SeleniumDriver {
                 if (alertPresent()) {
                     System.err.println("Couldn't take ScreenShot Alert Present in the page");
                     return ((TakesScreenshot) (new EmptyDriver())).getScreenshotAs(OutputType.FILE);
-                } else if (driver instanceof MobileDriver || driver instanceof ExtendedHtmlUnitDriver
+                } else if (driver instanceof ExtendedHtmlUnitDriver
                         || driver instanceof EmptyDriver) {
                     return ((TakesScreenshot) (driver)).getScreenshotAs(OutputType.FILE);
                 } else {
@@ -223,10 +218,6 @@ public class SeleniumDriver {
                 Capabilities cap;
                 if (driver instanceof ExtendedHtmlUnitDriver) {
                     cap = ((ExtendedHtmlUnitDriver) driver).getCapabilities();
-                } else if (driver instanceof MobileDriver) {
-                    cap = ((RemoteWebDriver) driver).getCapabilities();
-                    Object pV = cap.getCapability("platformVersion");
-                    return pV == null ? "" : pV.toString();
                 } else if (driver instanceof RemoteWebDriver) {
                     cap = ((RemoteWebDriver) driver).getCapabilities();
                 } else {
@@ -246,7 +237,7 @@ public class SeleniumDriver {
                     }
                 } else {
                     // Browser version for Firefox and Chrome
-                    browser_version = cap.getVersion();
+                    browser_version = cap.getBrowserVersion();
                 }
                 if (browser_version.contains(".") && browser_version.length() > 5) {
                     return browser_version.substring(0, browser_version.indexOf("."));
@@ -272,20 +263,12 @@ public class SeleniumDriver {
             Capabilities cap;
             if (driver instanceof ExtendedHtmlUnitDriver) {
                 cap = ((ExtendedHtmlUnitDriver) driver).getCapabilities();
-            } else if (driver instanceof MobileDriver) {
-                cap = ((RemoteWebDriver) driver).getCapabilities();
-                Object platf = cap.getCapability("platformName");
-                if (platf != null && !platf.toString().isEmpty()) {
-                    return platf.toString();
-                } else {
-                    return (driver instanceof AndroidDriver) ? "Android" : "IOS";
-                }
             } else if (driver instanceof EmptyDriver) {
                 return Platform.getCurrent().name();
             } else {
                 cap = ((RemoteWebDriver) driver).getCapabilities();
             }
-            platform = cap.getPlatform();
+            platform = cap.getPlatformName();
             if (isLocal) {
                 platform = Platform.getCurrent();
             }

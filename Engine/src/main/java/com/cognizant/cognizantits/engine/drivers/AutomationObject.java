@@ -26,6 +26,8 @@ import com.cognizant.cognizantits.datalib.or.web.WebORPage;
 import com.cognizant.cognizantits.engine.constants.SystemDefaults;
 import com.cognizant.cognizantits.engine.core.Control;
 import com.cognizant.cognizantits.engine.drivers.findObjectBy.support.ByObjectProp;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -298,7 +300,7 @@ public class AutomationObject {
     }
 
     private List<WebElement> getElements(final SearchContext context, final List<ORAttribute> attributes, final String prop) {
-        WebDriverWait wait = new WebDriverWait(driver, getWaitTime());
+        WebDriverWait wait = new WebDriverWait(driver, getWaitDurationTime());
         try {
             return wait.until((ExpectedCondition<List<WebElement>>) (WebDriver driver) -> {
                 for (ORAttribute attr : attributes) {
@@ -334,7 +336,7 @@ public class AutomationObject {
                     driver.switchTo().frame(Integer.parseInt(frameData.trim()));
                 } else {
                     WebDriverWait wait = new WebDriverWait(driver,
-                            SystemDefaults.waitTime.get());
+                            Duration.ofSeconds(getSystemDefaultsWaitTime("waitTime")));
                     wait.until(ExpectedConditions
                             .frameToBeAvailableAndSwitchToIt(frameData));
                 }
@@ -457,6 +459,18 @@ public class AutomationObject {
 
     private int getWaitTime() {
         return this.waitTime != null ? this.waitTime : SystemDefaults.elementWaitTime.get();
+    }
+    private Duration getWaitDurationTime(){
+        return this.waitTime != null ? Duration.ofSeconds(this.waitTime) : Duration.ofSeconds(getSystemDefaultsWaitTime("elementWaitTime"));
+    }
+
+    private int getSystemDefaultsWaitTime(String type){
+        if("elementWaitTime".equalsIgnoreCase(type)){
+            return SystemDefaults.elementWaitTime.get();
+        }else if("waitTime".equalsIgnoreCase(type)){
+            return SystemDefaults.waitTime.get();
+        }
+        return -1;
     }
 
 }

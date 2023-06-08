@@ -24,6 +24,8 @@ import com.cognizant.cognizantits.engine.support.methodInf.Action;
 import com.cognizant.cognizantits.engine.support.methodInf.InputType;
 import com.cognizant.cognizantits.engine.support.methodInf.ObjectType;
 import com.paulhammant.ngwebdriver.NgWebDriver;
+
+import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openqa.selenium.JavascriptExecutor;
@@ -227,7 +229,7 @@ public class WaitFor extends Command {
     }
 
     private void waitFor(WaitType command, String message, String customScript) {
-        int time = getWaitTime();
+        Duration time = Duration.ofSeconds(getWaitTime());
         WebDriverWait wait = new WebDriverWait(Driver, time);
         try {
             waitFor(wait, command, customScript);
